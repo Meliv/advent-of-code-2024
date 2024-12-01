@@ -1,38 +1,35 @@
 import file_reader
 from collections import defaultdict
 
-def part_one(values: list[str]) -> int:
-    left = list()
-    right = list()
+FILE_NAME = 'files/day1.txt'
 
-    for value in values:
-        nums = value.split('   ')
-        left.append(int(nums[0]))
-        right.append(int(nums[1]))
+def part_one() -> int:
+    file_lines = file_reader.read_file(FILE_NAME)
+    file_len = len(file_lines)
+
+    left = [int(file_lines[l].split()[0]) for l in range(0,file_len)]
+    right = [int(file_lines[l].split()[1]) for l in range(0,file_len)]
 
     left.sort()
     right.sort()
 
-    return sum(abs(left[i] - right[i]) for i in range(0,len(values)))
+    return sum(abs(left[i] - right[i]) for i in range(0,file_len))
 
-def part_two(values: list[str]) -> int:
-    left = list()
-    right = list()
+    
+def part_two() -> int:
+    file_lines = file_reader.read_file(FILE_NAME)
+    file_len = len(file_lines)
 
-    for value in values:
-        nums = value.split('   ')
-        left.append(int(nums[0]))
-        right.append(int(nums[1]))
+    left = [int(file_lines[l].split()[0]) for l in range(0,file_len)]
+    right = [int(file_lines[l].split()[1]) for l in range(0,file_len)]
 
     key_values = defaultdict(int)
 
-    for i in range(0, len(values)):
+    for i in range(0, file_len):
         key_values[left[i]] += right.count(left[i]) * left[i]
 
     return sum(key_values.values())
 
 
-values = file_reader.read_file('files/day1.txt')
-
-print(f"Part One: {part_one(values)}")
-print(f"Part Two: {part_two(values)}")
+print(f"Part One: {part_one()}")
+print(f"Part Two: {part_two()}")
