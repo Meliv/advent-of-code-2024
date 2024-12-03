@@ -21,6 +21,5 @@ def part_two() -> int:
 
     return valid_reports
 
-print()
 print(f"Part One: {part_one()}")
 print(f"Part Two: {part_two()}")
