@@ -4,7 +4,7 @@ from collections import defaultdict
 FILE_NAME = 'files/day1.txt'
 
 def part_one() -> int:
-    file_lines = file_reader.read_file(FILE_NAME)
+    file_lines = file_reader.read_file_as_list_str(FILE_NAME)
     file_len = len(file_lines)
 
     left = sorted([int(file_lines[l].split()[0]) for l in range(0,file_len)])
@@ -13,7 +13,7 @@ def part_one() -> int:
     return sum(abs(left[i] - right[i]) for i in range(0,file_len))
 
 def part_two() -> int:
-    file_lines = file_reader.read_file(FILE_NAME)
+    file_lines = file_reader.read_file_as_list_str(FILE_NAME)
     file_len = len(file_lines)
 
     left = [int(file_lines[l].split()[0]) for l in range(0,file_len)]

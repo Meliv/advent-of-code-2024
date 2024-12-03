@@ -4,7 +4,7 @@ from itertools import pairwise
 FILE_NAME = 'files/day2.txt'
 pairwise_check = lambda v: all(1 <= abs(a-b) <= 3 for a, b in pairwise(v))
 
-input = [[int(i) for i in line] for line in [line.split() for line in file_reader.read_file(FILE_NAME)]]
+input = [[int(i) for i in line] for line in [line.split() for line in file_reader.read_file_as_list_str(FILE_NAME)]]
 
 def part_one() -> int:
     return len(list(filter(lambda x: (sorted(x) == x or sorted(x, reverse=True) == x) and pairwise_check(x), input)))
