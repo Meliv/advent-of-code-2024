@@ -1,8 +1,8 @@
-import day_1, unittest
+import day_1 as day, unittest
 
 class TestDay1(unittest.TestCase):
     def test_part1(self):
-        self.assertEqual(day_1.part_one(), 11)
+        self.assertEqual(day.part_one(), 11)
 
     def test_part2(self):
-        self.assertEqual(day_1.part_two(), 31)
+        self.assertEqual(day.part_two(), 31)
