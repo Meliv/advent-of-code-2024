@@ -2,7 +2,7 @@ import day_4 as day, unittest
 
 class TestDay4(unittest.TestCase):
     def test_part1(self):
-        self.assertEqual(day.part_one(), 0)
+        self.assertEqual(day.part_one(), 18)
 
     def test_part2(self):
         self.assertEqual(day.part_two(), 0)
@@ -15,7 +15,7 @@ class TestDay4(unittest.TestCase):
             ['B','C','D','E','F'],
             ['A','B','C','D','E']]
         
-        self.assertEqual(day.get_diagonal(diag), 'ABBCCCDDDDEEEEEIHHGGGFFFF')
+        self.assertEqual(''.join(day.get_diagonal(diag)), 'ABBCCCDDDDEEEEEIHHGGGFFFF')
         
     def test_get_diagonal_rectangle_tall(self):
         diag = [
@@ -27,7 +27,7 @@ class TestDay4(unittest.TestCase):
             ['A','B','C']
         ]
         
-        self.assertEqual(day.get_diagonal(diag), 'ABBCCCDDDEEEFFFHGG')
+        self.assertEqual(''.join(day.get_diagonal(diag)), 'ABBCCCDDDEEEFFFHGG')
 
     def test_get_diagonal_rectangle_wide(self):
         diag = [
@@ -36,6 +36,6 @@ class TestDay4(unittest.TestCase):
             ['A','B','C','D','E','F','G']
         ]
         
-        self.assertEqual(day.get_diagonal(diag), 'ABBCCCIHHGGGFFFEEEDDD')  
+        self.assertEqual(''.join(day.get_diagonal(diag)), 'ABBCCCIHHGGGFFFEEEDDD')  
         
 

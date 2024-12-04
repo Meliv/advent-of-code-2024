@@ -6,15 +6,12 @@ print('x')
 
 def part_one() -> int:
 
-    print(f'Total Chars: {len(''.join(input))}')
-
     horizontal = ','.join(input)
     vertical = ','.join([','.join(x) for x in list((zip(*input[::-1])))])
     diag_1 = ','.join(get_diagonal(input))
     diag_2 = ','.join(get_diagonal(list((zip(*input[::-1])))))
 
     arr = ','.join([horizontal, vertical, diag_1, diag_2])
-
 
     return arr.count('XMAS') + arr.count('SAMX')
 
