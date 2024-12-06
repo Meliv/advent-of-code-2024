@@ -15,6 +15,14 @@ class Position():
         self.x = x
         self.y = y
         self.d = d
+        
+    def __eq__(self, other):
+        if isinstance(other, Position):
+            return self.x == other.x and self.y == other.y
+        return False
+
+    def __hash__(self):
+        return hash((self.x, self.y))
 
 class Tile():
     def __init__(self, c):
@@ -24,19 +32,23 @@ class Tile():
 def part_one() -> int:
 
     tiles: dict[tuple[int,int],Tile] = {}
-    visited = set()
+    unique_visited = set()
+    visited: list[Position] = []
     
     def print_grid():
         for i,(x,y) in enumerate(tiles.keys()):
             if i != 0 and i % 10 == 0:
                 print()
                     
-            if (x,y) in visited:
+            if Position(x,y,any) in unique_visited:
                 print('X', end='')
             else:
                 print(tiles.get((x,y)).c, end='')
                 
         print('\n')
+        print(f'{current_position.x}, {current_position.y}')
+        print()
+        
 
     def get_next_position(current_position: Position) -> Position:
 
@@ -80,19 +92,24 @@ def part_one() -> int:
                 
     try:
         while True:
-            if (current_position.x, current_position.y) not in visited:
-                visited.add((current_position.x, current_position.y))
+            if current_position not in unique_visited:
+                unique_visited.add(current_position)
             else:
                 pass
             
-            #print_grid()
+            visited.append(current_position)
+            
+            print_grid()
                 
             current_position = get_next_position(current_position)
     except:
         pass
 
     print()
-    return len(visited)
+    print(f"Part 1: Unique Visits {len(unique_visited)}")
+    print(f"Part 2: Visits {len(visited)}")
+    
+    return len(unique_visited)
 
 def part_two() -> int:
     return 0
