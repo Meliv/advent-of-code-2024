@@ -210,7 +210,7 @@ def part_two() -> int:
         pass
         
     for i in range(0, len(original_path)-1):
-        print(f"Run {i} of {len(original_path)}")
+        print(f"Run {i+1} of {len(original_path)}")
         
         '''     
         # Display the path for debugging
@@ -227,7 +227,10 @@ def part_two() -> int:
         
         # Insert obstacle
         obstacle = Position(original_path[i+1].x,original_path[i+1].y,any)
-        tiles, current_position = populate_tiles(input, obstacle)
+        tiles, _ = populate_tiles(input, obstacle)
+        
+        current_position = Position(original_path[i].x, original_path[i].y, original_path[i].d)
+        
         
         #print_grid_no_path(tiles)
         #print(i)
@@ -236,7 +239,7 @@ def part_two() -> int:
         max_cycle = 5000
         cycle = 0
         
-        path = original_path.copy()
+        path = []
         
         # Reset start
         try:
@@ -246,21 +249,18 @@ def part_two() -> int:
 
                 pass
 
-                if hit_obstacle and cycle > max_cycle and current_position in path:
-                    if any(filter(lambda xx: xx == current_position and xx.d == current_position.d, path)):
-                        inf_loops += 1
-                        #print_grid_no_path_current_position(tiles, current_position)  
-                        #print(i)
-                        break
+                if len(list(filter(lambda xx: xx == current_position and xx.d == current_position.d, path))) > 1:
+                    inf_loops += 1
+                    #print_grid_no_path_current_position(tiles, current_position)  
+                    #print(i)
+                    break
                 
                 #print_grid_no_path(tiles)
                 
                 current_position, hit = get_next_position(current_position, tiles)
         
-                if hit or hit_obstacle:
-                    hit_obstacle = True
-                    path.append(current_position)
-                    cycle += 1
+                path.append(current_position)
+                cycle += 1
         except:
             pass
 
