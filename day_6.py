@@ -18,7 +18,15 @@ class Cell:
     def __init__(self, x: int, y: int, c: chr):
         self.x = x        
         self.y = y        
-        self.c = c        
+        self.c = c
+    
+    def __eq__(self, other):
+        if isinstance(other, Cell):
+            return self.x == other.x and self.y == other.y and self.c == other.c
+        return False
+
+    def __hash__(self):
+        return hash((self.x, self.y, self.c))
         
 class Path:
     x: int
@@ -32,12 +40,18 @@ class Path:
     
 class Map:
     cells: list[Cell]
+    first_cell: Cell
     
     def __init__(self):
         self.cells = []
         for y, line in enumerate(file_reader.read_file_as_list_str(FILE_NAME)):
             for x, c in enumerate(line):
-                self.cells.append(Cell(x, y, c))
+                cell = Cell(x,y,c)
+                self.cells.append(cell)
+                
+                if cell.c == '^':
+                    cell.c = 'X'
+                    self.first_cell = cell
 
     def print(self, patrolled_cells: set[Cell]):
         line_length = 10 #Needs to be updated for longer input
@@ -62,36 +76,54 @@ class Map:
         return result
     
     def get_tile(self, x: int, y: int) -> Cell:
-        return [cell for cell in self.cells if cell.x == x and cell.y == y][0]
+        return next(cell for cell in self.cells if cell.x == x and cell.y == y)
     
-    def get_next_tile(self, path: Path) -> Cell:
-        match path.direction:
-            case Direction.North: return self.get_tile(path.x, path.y-1),
-            case Direction.South: return self.get_tile(path.x, path.y+1),
-            case Direction.East: return self.get_tile(path.x+1, path.y),
-            case Direction.West: return self.get_tile(path.x-1, path.y),
+    def get_next_tile(self, current_position: Path) -> Cell:
+        match current_position.direction:
+            case Direction.North: return self.get_tile(current_position.x, current_position.y-1)
+            case Direction.South: return self.get_tile(current_position.x, current_position.y+1)
+            case Direction.East: return self.get_tile(current_position.x+1, current_position.y)
+            case Direction.West: return self.get_tile(current_position.x-1, current_position.y)
             case _: raise Exception()
             
-    def get_next_path(self, next_tile: Cell, path: Path) -> Path:
-        new_path = Path(next_tile.x, next_tile.y, Direction.East)
+    def get_next_position(self, current_position: Path) -> Path:
         
-        match next_tile.c, path.direction:
-            case '#', Direction.North : new_path.direction = Direction.East,
-            case '#', Direction.East : new_path.direction = Direction.South,
-            case '#', Direction.South : new_path.direction = Direction.West,
-            case '#', Direction.West : new_path.direction = Direction.North,
-            case _: new_path.direction = path.direction
+        next_tile: Cell = self.get_next_tile(current_position)
+        
+        match next_tile.c, current_position.direction:
+            case ('#', Direction.North) : current_position.direction = Direction.East
+            case ('#', Direction.East) : current_position.direction = Direction.South
+            case ('#', Direction.South) : current_position.direction = Direction.West
+            case ('#', Direction.West) : current_position.direction = Direction.North
+            case _: pass
             
-        return new_path
+        next_tile = self.get_next_tile(current_position)
+        
+        return Path(next_tile.x, next_tile.y, current_position.direction)
     
 def part_one() -> int:
 
     map: Map = Map()
     
-    map.print(set())  
+    patrolled_cells: set[Cell] = set()
+    patrolled_cells.add(map.first_cell)
+    
+    current_path = Path(map.first_cell.x, map.first_cell.y, Direction.North)
+    
+    try:
+        while True:
+            next_path = map.get_next_position(current_path)
+        
+            patrolled_cells.add(Cell(next_path.x, next_path.y, 'X'))
+        
+            current_path = next_path
+            
+            # Debug
+            #map.print(patrolled_cells)
+    except:
+        pass # This is lazy as hell I know
 
-
-    return 0
+    return len(patrolled_cells)
 
 def part_two() -> int:
     return 0
