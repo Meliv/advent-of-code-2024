@@ -9,7 +9,6 @@ def part_one():
 
     input = file_reader.read_file_as_str(FILE_NAME)
     line_len = len(input.split('\n')[0])
-    input = input.replace('\n','')
     input_len = len(input)
     grouped = groupby([(m.start(), m.group()) for m in sorted(re.finditer(REGEX, input),key=lambda x:x.group())], key=lambda x: x[1])
     antinodes, chars = set(), set()
@@ -21,14 +20,20 @@ def part_one():
         for a,b in combinations(list(group[1]), 2):
             chars.add(a[1])
             d = abs(a[0] - b[0])
-            for ai in (x for x in [a[0]-d,b[0]+d] if 0 <= x <= input_len):
-                antinodes.add(ai)
+            
+            same_line = a[0] // (line_len+1) == b[0] // (line_len+1)
+            
+            if same_line:
+                pass
+            else:
+                for ai in (x for x in [a[0]-d,b[0]+d] if 0 <= x <= input_len and input[x] != '\n'):
+                    antinodes.add(ai)
 
     #debug
+    
+    print(chars)
+    
     for i,c in enumerate(input):
-        if i % line_len == 0:
-            print()
-            
         if i in antinodes and c not in chars:
             print('#',end='')
         else:
