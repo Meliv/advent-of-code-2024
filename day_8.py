@@ -7,37 +7,27 @@ REGEX = '[^.\n]'
 
 def part_one():
 
-    input = file_reader.read_file_as_str(FILE_NAME)
-    line_len = len(input.split('\n')[0])
-    input_len = len(input)
-    grouped = groupby([(m.start(), m.group()) for m in sorted(re.finditer(REGEX, input),key=lambda x:x.group())], key=lambda x: x[1])
-    antinodes, chars = set(), set()
-    
-    chars.add('\n')
+    input = file_reader.read_file_as_list_str(FILE_NAME)
+    input_len, line_len = len(input), len(input[0])
+    antinodes = set()
+    grouped = groupby([((m.start()%line_len,m.start()//line_len), m.group()) for m in sorted(re.finditer(REGEX, ''.join(input)),key=lambda x:x.group())], key=lambda x: x[1])
     
     for group in grouped:
-        
         for a,b in combinations(list(group[1]), 2):
-            chars.add(a[1])
-            d = abs(a[0] - b[0])
-            
-            same_line = a[0] // (line_len+1) == b[0] // (line_len+1)
-            
-            if same_line:
-                pass
-            else:
-                for ai in (x for x in [a[0]-d,b[0]+d] if 0 <= x <= input_len and input[x] != '\n'):
-                    antinodes.add(ai)
+        
+            x1,x2 = a[0][0], b[0][0]
+        
+            y1,y2 = a[0][1], b[0][1]
 
-    #debug
-    
-    print(chars)
-    
-    for i,c in enumerate(input):
-        if i in antinodes and c not in chars:
-            print('#',end='')
-        else:
-            print(c,end='')
+            xV,yV = x2 - x1, y2 - y1
+            
+            x3,y3 = (x2 + xV, y2 + yV)        
+            x4,y4 = (x1 - xV, y1 - yV)
+
+            if x3 in range(line_len) and y3 in range(input_len):
+                antinodes.add((x3,y3))                
+            if x4 in range(line_len) and y4 in range(input_len):
+                antinodes.add((x4,y4))    
             
     print(f'\nTotal Antinodes: {len(antinodes)}')
 
