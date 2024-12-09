@@ -1,30 +1,28 @@
+from queue import Queue
 import file_reader
 
 FILE_NAME = 'files/day9.txt'
 
 def part_one():
+    print('x')
     input = file_reader.read_file_as_str(FILE_NAME)
-    memory, defragged = [], []
+    memory = []
 
     for i,c in enumerate(input):
         memory.extend(['.']*int(c) if i%2 else [str(i//2)]*int(c))
 
-    # Defrag here
-    x = False
-    for i,a in enumerate(memory[::-1]):
-        for j in range(len(memory)):
-            if memory[j] == '.':
-                memory[j] = a
-                memory[-1-i] = '.'
-                x = not any(y for y in memory[j+1:] if y != '.')
+    q = Queue()
+    [q.put(i) for i,x in enumerate(memory) if x == '.']
+    
+    for i,c in enumerate(memory[::-1]):
+        if c == '.': continue
+        x = q.get()
+        if x >= len(memory)-i: break
+        memory[x] = c
+        memory[-1-i] = '.'
+        if q.empty(): break
 
-                break
-        if x: break
-
-        
-    # End defrag
-
-    return sum((i*int(c) for i,c in enumerate(defragged) if c != '.'))
+    return sum((i*int(c) for i,c in enumerate(memory) if c != '.'))
 
 def part_two():
     input = file_reader.read_file_as_str(FILE_NAME)
