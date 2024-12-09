@@ -4,20 +4,24 @@ FILE_NAME = 'files/day9.txt'
 
 def part_one():
     input = file_reader.read_file_as_str(FILE_NAME)
-    print('x') #Debug
-
     memory, defragged = [], []
 
     for i,c in enumerate(input):
         memory.extend(['.']*int(c) if i%2 else [str(i//2)]*int(c))
 
     # Defrag here
+    x = False
+    for i,a in enumerate(memory[::-1]):
+        for j in range(len(memory)):
+            if memory[j] == '.':
+                memory[j] = a
+                memory[-1-i] = '.'
+                x = not any(y for y in memory[j+1:] if y != '.')
 
-    for a in memory[::-1]:
-        print(a,end='')
+                break
+        if x: break
 
-    print()
-
+        
     # End defrag
 
     return sum((i*int(c) for i,c in enumerate(defragged) if c != '.'))
