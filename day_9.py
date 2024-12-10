@@ -1,4 +1,3 @@
-import random
 import file_reader
 
 FILE_NAME = 'files/day9.txt'
