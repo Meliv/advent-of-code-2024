@@ -28,8 +28,8 @@ def part_one():
 
     filtered_g = nx.DiGraph()
     for u, v in G.edges:
-        if G.nodes[v]['value'] == G.nodes[u]['value'] + 1:  # Check the constraint
-            filtered_g.add_edge(u, v, weight=1)  # Add edge with weight (can be any value)
+        if G.nodes[v]['value'] == G.nodes[u]['value'] + 1:
+            filtered_g.add_edge(u, v, weight=1)
 
     sources = [n for n, d in G.nodes(data=True) if d['value'] == 0]
     targets = [n for n, d in G.nodes(data=True) if d['value'] == 9]
@@ -38,11 +38,9 @@ def part_one():
     for source in sources:
         for target in targets:
             try:
-                # Use Dijkstra's algorithm on the filtered graph
                 p = nx.dijkstra_path(filtered_g, source, target)
                 all_paths.append(p)
             except nx.NetworkXNoPath:
-                # No path found between source and target
                 continue
 
     return len(all_paths)
