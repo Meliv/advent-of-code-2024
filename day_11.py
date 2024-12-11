@@ -1,3 +1,4 @@
+from collections import defaultdict
 import file_reader
 
 FILE_NAME = 'files/day11.txt'
@@ -178,7 +179,43 @@ def part_one():
     return stones.sizeOfLL()
 
 def part_two():
-    return 0
+    
+    d = defaultdict(int)
+    
+    for stone in file_reader.read_file_as_str(FILE_NAME).split(' '):
+        d[stone] = 1
+
+    
+    loop_count = 75
+        
+    while loop_count != 0:
+        new_d = d.copy()
+        
+        for value, count in d.items():
+            
+            if value == '0':
+                new_d['0'] -= count
+                new_d['1'] += count
+            elif len(value)%2 == 0:
+                
+                left = value[:len(value)//2]
+                right = str(int(value[-len(value)//2:]))
+                
+                new_d[value] -= count
+                new_d[left] += count
+                new_d[right] += count
+            else:
+                new_d[value] -= count
+                new_d[str(int(value)*2024)] += count
+        
+        loop_count -= 1
+        d = defaultdict(int)
+        
+        for v,i in new_d.items():
+            if i > 0:
+                d[v] = i
+    
+    return sum(d.values())
 
 print(f"Part One: {part_one()}")
 print(f"Part Two: {part_two()}")
