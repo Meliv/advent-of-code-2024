@@ -12,47 +12,37 @@ def part_one():
     input.insert(0, '.'*len(input[0]))
     input.insert(len(input), '.'*len(input[0]))
 
-    '''
-    Flood-fill (node):
-    1. If node is not Inside return.
-    2. Set the node
-    3. Perform Flood-fill one step to the south of node.
-    4. Perform Flood-fill one step to the north of node
-    5. Perform Flood-fill one step to the west of node
-    6. Perform Flood-fill one step to the east of node
-    7. Return.
-    '''
-    
-    processed_nodes = []
-    shapes = []
-    
-    def flood_fill(input, x, y, c, filled_nodes):
-        if input[y][x] != c or (x,y) in processed_nodes:
-            return filled_nodes
+    processed_nodes, price = set(), 0
+
+    def flood_fill(input, x, y, c, area_nodes):
+        if input[y][x] != c:
+            return 1
+            
+        if (y,x) in processed_nodes:
+            return 0
+            
+        area_nodes.append((y,x))
+        processed_nodes.add((y,x))
+
+        fences_needed = 0
+
+        fences_needed += flood_fill(input, x, y+1, c, area_nodes)
+        fences_needed += flood_fill(input, x, y-1, c, area_nodes)
+        fences_needed += flood_fill(input, x-1, y, c, area_nodes)
+        fences_needed += flood_fill(input, x+1, y, c, area_nodes)
         
-        processed_nodes.append((x,y))
-        
-        flood_fill(input, x, y+1, c, filled_nodes)
-        flood_fill(input, x, y-1, c, filled_nodes)
-        flood_fill(input, x-1, y, c, filled_nodes)
-        flood_fill(input, x+1, y, c, filled_nodes)
-        
-        filled_nodes.append((x,y))
-        return filled_nodes
+        return fences_needed
 
     for y in range(len(input)):
         for x in range(len(input[y])):
-            if input[y][x] == '.' or (x,y) in processed_nodes:
+            if input[y][x] == '.' or (y,x) in processed_nodes:
                 continue
             
-            filled_nodes = flood_fill(input, x, y, input[y][x], [])
-            
-            if any(filled_nodes):
-                shapes.append(filled_nodes)
-
-    # Work out perimeters here
+            area_nodes = []
+            fences = flood_fill(input, x, y, input[y][x], area_nodes)
+            price += len(area_nodes) * fences 
     
-    return 0
+    return price
 
 def part_two():
     return 0
