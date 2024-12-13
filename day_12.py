@@ -14,41 +14,6 @@ def part_one():
 
     processed_nodes, price = set(), 0
     
-    def get_sides(area_nodes, c):
-    
-        vertices = 0
-        
-        rot_dir = [
-            ((0,-1),(-1,-1),(-1,0)),
-            ((-1,0),(-1,1),(0,1)),
-            ((0,1),(1,1),(1,0)),
-            ((1,0),(1,-1),(0,-1)),
-            ]
-        
-        
-        for y_node,x_node in area_nodes:
-            
-            for first, second, third in rot_dir:
-
-                f_node = input[y_node+first[0]][x_node+first[1]]    
-                s_node = input[y_node+second[0]][x_node+second[1]]    
-                t_node = input[y_node+third[0]][x_node+third[1]]
-                
-                # Corner angle
-                if f_node == c and s_node != c and t_node == c:
-                    vertices += 1
-                    
-                # Outer corner angle
-                if f_node != c and s_node != c and t_node != c:
-                    vertices += 1
-                    
-                # Weird diagonal
-                if f_node != c and s_node == c and t_node != c:
-                    vertices += 1
-            
-    
-        return vertices
-
     def flood_fill(input, x, y, c, area_nodes):
         if input[y][x] != c:
             return 1
@@ -68,9 +33,6 @@ def part_one():
         
         return fences_needed
 
-
-    part_two = 0
-
     for y in range(len(input)):
         for x in range(len(input[y])):
             if input[y][x] == '.' or (y,x) in processed_nodes:
@@ -79,12 +41,6 @@ def part_one():
             area_nodes = []
             fences = flood_fill(input, x, y, input[y][x], area_nodes)
             price += len(area_nodes) * fences 
-            
-            n_sides = get_sides(area_nodes, input[y][x])
-            
-            part_two += n_sides * len(area_nodes)
-            
-            pass
     
     return price
 
@@ -103,14 +59,12 @@ def part_two():
     def get_sides(area_nodes, c):
     
         vertices = 0
-        
         rot_dir = [
             ((0,-1),(-1,-1),(-1,0)),
             ((-1,0),(-1,1),(0,1)),
             ((0,1),(1,1),(1,0)),
-            ((1,0),(1,-1),(0,-1)),
-            ]
-        
+            ((1,0),(1,-1),(0,-1))
+        ]
         
         for y_node,x_node in area_nodes:
             
@@ -120,18 +74,12 @@ def part_two():
                 s_node = input[y_node+second[0]][x_node+second[1]]    
                 t_node = input[y_node+third[0]][x_node+third[1]]
                 
-                # Corner angle
                 if f_node == c and s_node != c and t_node == c:
                     vertices += 1
-                    
-                # Outer corner angle
                 if f_node != c and s_node != c and t_node != c:
                     vertices += 1
-                    
-                # Weird diagonal
                 if f_node != c and s_node == c and t_node != c:
                     vertices += 1
-            
     
         return vertices
 
@@ -154,20 +102,17 @@ def part_two():
         
         return fences_needed
 
-
     for y in range(len(input)):
         for x in range(len(input[y])):
             if input[y][x] == '.' or (y,x) in processed_nodes:
                 continue
             
             area_nodes = []
-            fences = flood_fill(input, x, y, input[y][x], area_nodes)
+            _ = flood_fill(input, x, y, input[y][x], area_nodes)
             
             n_sides = get_sides(area_nodes, input[y][x])
             
             price += n_sides * len(area_nodes)
-            
-            pass
     
     return price
 
